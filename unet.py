@@ -31,7 +31,7 @@ conv7_2 = tf.keras.layers.Conv2D(filters=64, kernel_size=(3,3), activation='relu
 up_conv4 = tf.keras.layers.Conv2DTranspose(filters=32, kernel_size=(2,2), strides=(2,2), padding='same')(conv7_2)
 conv8_1 = tf.keras.layers.Conv2D(filters=32, kernel_size=(3,3), activation='relu', padding='same')(up_conv4)
 conv8_2 = tf.keras.layers.Conv2D(filters=32, kernel_size=(3,3), activation='relu', padding='same')(conv8_1)
-output = tf.keras.layers.Conv2D(filters=1, kernel_size=(3, 3), activation='relu', padding='same')(conv8_2)
+output = tf.keras.layers.Conv2D(filters=3, kernel_size=(3, 3), activation='relu', padding='same')(conv8_2)
 
 model_unet = tf.keras.Model(inputs=input, outputs=output)
 model_unet.summary()
