@@ -52,8 +52,8 @@ if my_upload is not None:
           col1, col2 = st.columns(2)
           with col1:
             st.header("Before")
-            col1.image(my_upload)
+            col1.image(my_upload, width=800)
           
           with col2:
             st.header("After")
-            st.image(fake_image)
+            st.image(fake_image, width=800)
