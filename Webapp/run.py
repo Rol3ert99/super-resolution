@@ -60,17 +60,19 @@ if my_upload is not None:
         st.error("The uploaded file is too large. Please upload an image smaller than 5MB.")
     else:
         my_upload = Image.open(my_upload)
-        my_upload_np = np.array(my_upload)
-        if my_upload_np.shape[-1] == 4:
-          my_upload_np = my_upload_np[...,:-1]
+        st.image(my_upload)
+        my_upload.save('./image.png')
+        SAVED_MODEL_PATH = "https://tfhub.dev/captain-pool/esrgan-tf2/1"
+        IMAGE_PATH = './image.png'
 
-        hr_size = (tf.convert_to_tensor(my_upload_np.shape[:-1]) // 4) * 4
-        my_upload_np = tf.image.crop_to_bounding_box(my_upload_np, 0, 0, hr_size[0], hr_size[1])
-        my_upload_np = tf.cast(my_upload_np, tf.float32)
-        my_upload_np = tf.expand_dims(my_upload_np, 0)
+        hr_image = preprocess_image(IMAGE_PATH)
 
         model = hub.load(SAVED_MODEL_PATH)
-        fake_image = model(my_upload_np)
+        fake_image = model(hr_image)
+        fake_image = tf.squeeze(fake_image)
 
+        fake_image = tf.squeeze(fake_image)
+        fake_image = np.asarray(fake_image)
+        fake_image = tf.clip_by_value(fake_image, 0, 255)
+        fake_image = Image.fromarray(tf.cast(fake_image, tf.uint8).numpy())
         st.image(fake_image)
-
