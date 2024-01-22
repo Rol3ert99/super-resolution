@@ -21,11 +21,9 @@ SAVED_MODEL_PATH = "https://tfhub.dev/captain-pool/esrgan-tf2/1"
 MAX_FILE_SIZE = 5 * 1024 * 1024
 col1, col2 = st.columns(2)
 
-with st.container():
-  col1 = st.columns(1)
-  with col1:
-    st.write("## Upload file")
-    my_upload = st.file_uploader("Upload an image", type=["png", "jpg", "jpeg"])
+
+st.write("## Upload file")
+my_upload = st.file_uploader("Upload an image", type=["png", "jpg", "jpeg"])
 
 
 if my_upload is not None:
@@ -33,10 +31,7 @@ if my_upload is not None:
         st.error("The uploaded file is too large. Please upload an image smaller than 5MB.")
     else:
         my_upload = Image.open(my_upload)
-        
-        with col1:
-          st.header("Before")
-          col1.image(my_upload)
+
 
         my_upload.save('./image.png')
         SAVED_MODEL_PATH = "https://tfhub.dev/captain-pool/esrgan-tf2/1"
