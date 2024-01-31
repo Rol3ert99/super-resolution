@@ -48,6 +48,16 @@ if my_upload is not None:
         fake_image = tf.clip_by_value(fake_image, 0, 255)
         fake_image = Image.fromarray(tf.cast(fake_image, tf.uint8).numpy())
 
+        # device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+        # model = RealESRGAN(device, scale=4)
+        # model.load_weights('weights/RealESRGAN_x4.pth', download=True)
+
+        # path_to_image = './image.png'
+        # image = Image.open(path_to_image).convert('RGB')
+
+        # fake_image = model.predict(image)
+
         with st.container():
           col1, col2 = st.columns(2)
           with col1:
