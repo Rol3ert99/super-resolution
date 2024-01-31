@@ -31,8 +31,28 @@ def create_unet_model():
     up_conv4 = tf.keras.layers.Conv2DTranspose(filters=32, kernel_size=(2,2), strides=(2,2), padding='same')(conv7_2)
     conv8_1 = tf.keras.layers.Conv2D(filters=32, kernel_size=(3,3), activation='relu', padding='same')(up_conv4)
     conv8_2 = tf.keras.layers.Conv2D(filters=32, kernel_size=(3,3), activation='relu', padding='same')(conv8_1)
-    output = tf.keras.layers.Conv2D(filters=3, kernel_size=(3, 3), activation='relu', padding='same')(conv8_2)
+    output = tf.keras.layers.Conv2D(filters=3, kernel_size=(3, 3), activation='sigmoid', padding='same')(conv8_2)
+
+    # clipped_output = tf.clip_by_value(output, clip_value_min=0, clip_value_max=1)
 
     model_unet = tf.keras.Model(inputs=input, outputs=output)
     return model_unet
 
+
+# ValueError: A KerasTensor cannot be used as input to a TensorFlow function. A KerasTensor is a symbolic placeholder for a shape and dtype, used when constructing Keras Functional models or Keras Functions. You can only use it as input to a Keras layer or a Keras operation (from the namespaces `keras.layers` and `keras.operations`). You are likely doing something like:
+
+# ```
+# x = Input(...)
+# ...
+# tf_fn(x)  # Invalid.
+# ```
+
+# What you should do instead is wrap `tf_fn` in a layer:
+
+# ```
+# class MyLayer(Layer):
+#     def call(self, x):
+#         return tf_fn(x)
+
+# x = MyLayer()(x)
+# ```
