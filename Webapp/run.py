@@ -4,6 +4,10 @@ import numpy as np
 import tensorflow as tf
 import cv2
 import io
+import sys
+import torch
+sys.path.insert(0, '/home/rol3ert99/Pulpit/super-resolution/image_colorizing')
+import color_img
 
 SAVED_MODEL_PATH = "https://tfhub.dev/captain-pool/esrgan-tf2/1"
 
@@ -48,12 +52,17 @@ st.markdown("""Our project is a web application that allows for enhancing the
             * **Python libraries:** tensorflow, opencv, streamlit, numpy
             """)
 
+option = st.selectbox(
+    'what operation you want to perform on the image?',
+    ('Super-resolution', 'Colorizing'))
+
+
 st.write("## Upload file")
 my_upload = st.file_uploader("Upload an image", type=["png", "jpg", "jpeg"])
 
 col1, col2 = st.columns(2)
 
-if my_upload is not None:
+if my_upload is not None and option == 'Super-resolution':
     col1.header("Before")
     col2.header("After")
     col1.image(my_upload, use_column_width=True)
@@ -74,5 +83,15 @@ if my_upload is not None:
                          data=img_io,
                          file_name='enhanced_image.png',
                          mime='image/png')
-
     
+    
+if my_upload is not None and option == 'Colorizing':
+    col1.header("Before")
+    col2.header("After")
+    col1.image(my_upload, use_column_width=True)
+    img = read_image_bytes(my_upload)
+    colorizer_siggraph17 = color_img.siggraph17(pretrained=True).eval()
+    (tens_l_orig, tens_l_rs) = color_img.preprocess_img(img, HW=(256,256))
+    img_bw = color_img.postprocess_tens(tens_l_orig, torch.cat((0*tens_l_orig,0*tens_l_orig),dim=1))
+    out_img_siggraph17 = color_img.postprocess_tens(tens_l_orig, colorizer_siggraph17(tens_l_rs).cpu())    
+    col2.image(out_img_siggraph17, use_column_width=True)
