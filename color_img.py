@@ -204,7 +204,9 @@ def postprocess_tens(tens_orig_l, out_ab, mode='bilinear'):
 def siggraph17(pretrained=True):
     model = SIGGRAPHGenerator()
     if(pretrained):
-        model.load_state_dict(torch.load('siggraph17-df00044c.pth'))
+        import torch.utils.model_zoo as model_zoo
+        # model.load_state_dict(torch.load('siggraph17-df00044c.pth'))
+        model.load_state_dict(model_zoo.load_url('https://colorizers.s3.us-east-2.amazonaws.com/siggraph17-df00044c.pth',map_location='cpu',check_hash=True))
     return model
 
 if __name__ == '__main__':
